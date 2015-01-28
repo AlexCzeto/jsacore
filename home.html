@@ -278,9 +278,7 @@
 
                     $("<h4 style='text-align:center'><strong>" + line[i].name +" </strong></h4>").appendTo("#npcParent" + (i+1));
                     $("<img id='npcFace"+ nameList[i] + "' src='" + getDynamicFace(emotionList[i], nameList[i]) + "' class='npcImage goodrepu' />").appendTo("#npcParent" + (i+1));
-
-                    $("<div id='" + nameList[i] + "Bar'> </div>").appendTo("#npcParent" + (i+1));
-                    // $("<progress id='health_" + nameList[i] + "' class='healthBar' value='" + healthList[i] + "' max='100'></progress>").appendTo("#" + nameList[i] + "Bar");
+                    $("<img id='npcHealth"+ nameList[i] + "' src='surveys/health.png' class='healthbox  ' />").appendTo("#npcParent" + (i+1));
 
                 $('#chat_' + nameList[0]).text('Can I get a copy of Destiny?')
                 $('#chat_' + nameList[0]).addClass("callout");
@@ -313,10 +311,6 @@
             in the model. All of the npc information that needs to be changed in the UI is fetched from a JSON call.
             The next step button is disabled such that the user cannot ruin the animations by spamming the button.
             The changes made in the specific steps are in their respective functions as a matter of organization. */
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.open("GET", "surveys/ajax", true);
-            xmlhttp.onload=function(){
-                    var npcData = JSON.parse(xmlhttp.response);
 
                     var npcCount = npcData["npc_count"];
                     var nameList = npcData["names"];
@@ -369,8 +363,6 @@
                         }
                   
                     }
-            }
-            xmlhttp.send();
         }
 
         function penultimateUpdate(passingNPCs, nameList){

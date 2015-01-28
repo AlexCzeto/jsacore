@@ -33,6 +33,11 @@ dt {
         border-radius: 5px;
     }
 
+    .healthbox {
+        width:100%;
+        height:auto;
+    }
+
     .scoreboard-color-legend{         
         border-radius:50%; 
         border-style:solid; 

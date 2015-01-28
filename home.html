@@ -24,7 +24,32 @@
         <script>
         //GLOBAL VARIABLE//
         var repeat = true; //Set true initially so that we get the repeat run
+        var npcCount = 6;
+        var nameList = ["Alex", "Smith", "Johnson", "William", "Mary", "David", "Jennifer", "Chris", "Lisa", "Edward",
+            "Laura", "Sergio", "Sarah", "Emilie", "Matthew", "Kevin", "Liam",
+            "Ahmed"];
 
+        var gameStatus = 'initial';
+        var line = [];
+
+        var emotionList = [[0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0]];
+
+            function makeNPC (position) {
+                var name = nameList.splice(getRandomInt(0, nameList.length-1), 1);
+                var npc_in_line = new npc(name[0]); //because splice returns an array
+                return npc_in_line;
+            }
+            //Defining NPC class
+            function npc(name) {
+                this.name = name;
+            }
+
+            //Initialize Function
+            function initialize (numInLine) {
+                for (var count = 0; count < numInLine; count++) {
+                    line.push(makeNPC(count));
+                }
+            }
 
 
         // Returns a random integer between min (included) and max (excluded)
@@ -90,8 +115,8 @@
             
             var emotionalTable = [
                 ['{% static "surveys/TEMP.jpg" %}', '{% static "surveys/TEMP.jpg" %}', '{% static "surveys/distress' + imagecounter + '.jpg" %}', '{% static "surveys/TEMP.jpg" %}', '{% static "surveys/TEMP.jpg" %}'],
-                ['{% static "surveys/TEMP.jpg" %}', '{% static "surveys/TEMP.jpg" %}', '{% static "surveys/distress' + imagecounter + '.jpg" %}', '{% static "surveys/TEMP.jpg" %}', '{% static "surveys/TEMP.jpg" %}'],
-                ['{% static "surveys/fear' + imagecounter + '.jpg" %}', '{% static "surveys/fear' + imagecounter + '.jpg" %}', '{% static "surveys/normal' + imagecounter + '.jpg" %}', '{% static "surveys/hope' + imagecounter + '.jpg" %}', '{% static "surveys/hope' + imagecounter + '.jpg" %}'],
+                ['{% static "surveys/TEMP.jpg" %}', '{% static "surveys/TEMP.jpg" %}', '"surveys/distress' + imagecounter + '.jpg"}', '{% static "surveys/TEMP.jpg" %}', '{% static "surveys/TEMP.jpg" %}'],
+                ['{% static "surveys/fear' + imagecounter + '.jpg" %}', '{% static "surveys/fear' + imagecounter + '.jpg" %}', '"surveys/normal' + imagecounter + '.jpg"', '{% static "surveys/hope' + imagecounter + '.jpg" %}', '{% static "surveys/hope' + imagecounter + '.jpg" %}'],
                 ['{% static "surveys/TEMP.jpg" %}', '{% static "surveys/TEMP.jpg" %}', '{% static "surveys/happy' + imagecounter + '.jpg" %}', '{% static "surveys/TEMP.jpg" %}', '{% static "surveys/TEMP.jpg" %}'],
                 ['{% static "surveys/TEMP.jpg" %}', '{% static "surveys/TEMP.jpg" %}', '{% static "surveys/happy' + imagecounter + '.jpg" %}', '{% static "surveys/TEMP.jpg" %}'], ['{% static "surveys/TEMP.jpg" %}']
             ]
@@ -236,27 +261,26 @@
             /* Function is called everytime the page is loaded. It retrives data about the NPCs through a JSON call.
             Creates a div hirearcy for each NPC such that the elements can be modified and adapted as they move through the line.
             If the game is over, it will create a button to restart the game. */
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.open("GET", "surveys/initialize", true);
-            xmlhttp.onload=function(){
-                var npcData = JSON.parse(xmlhttp.response);
-                var npcCount = npcData["npc_count"];
-                var nameList = npcData["names"];
-                var actionList = npcData["actions"];
-                var emotionList = npcData["emotions"];
-                var healthList = npcData["health"];
-                var gameStatus = npcData["gameStatus"];
-                var passingNPCs = npcData["passing_list"];
+
+
+                // var npcData = JSON.parse(xmlhttp.response);
+                // var npcCount = npcData["npc_count"];
+                // var nameList = npcData["names"];
+                // var actionList = npcData["actions"];
+                // var emotionList = npcData["emotions"];
+                // var healthList = npcData["health"];
+                // var gameStatus = npcData["gameStatus"];
+                // var passingNPCs = npcData["passing_list"];
 
                 for(var i = 0; i < npcCount; i++){
                     $("<div id='npcParent" + (i+1) + "' class='npc-container npcHolder'> </div>").appendTo("#npcDiv");
-                    $("<div id='chat_" + nameList[i] + "' class='calloutFrame top'> </div>").appendTo("#npcParent" + (i+1));
+                    $("<div id='chat_" + line[i].name + "' class='calloutFrame top'> </div>").appendTo("#npcParent" + (i+1));
 
-                    $("<h4 style='text-align:center'><strong>" + nameList[i] +" </strong></h4>").appendTo("#npcParent" + (i+1));
+                    $("<h4 style='text-align:center'><strong>" + line[i].name +" </strong></h4>").appendTo("#npcParent" + (i+1));
                     $("<img id='npcFace"+ nameList[i] + "' src='" + getDynamicFace(emotionList[i], nameList[i]) + "' class='npcImage goodrepu' />").appendTo("#npcParent" + (i+1));
 
                     $("<div id='" + nameList[i] + "Bar'> </div>").appendTo("#npcParent" + (i+1));
-                    $("<progress id='health_" + nameList[i] + "' class='healthBar' value='" + healthList[i] + "' max='100'></progress>").appendTo("#" + nameList[i] + "Bar");
+                    // $("<progress id='health_" + nameList[i] + "' class='healthBar' value='" + healthList[i] + "' max='100'></progress>").appendTo("#" + nameList[i] + "Bar");
 
                     // $("<dl style='width:100%' id='" + nameList[i] + "Chart' > </dl>").appendTo("#" + nameList[i] + "Bar");
                     // $("<dt id='joytext_" + nameList[i] + "'> Joy - " + getEmotionPercent(emotionList[i][0]) + "%</dt>").appendTo("#" + nameList[i] + "Chart");
@@ -268,7 +292,6 @@
                     // $("<dt id='feartext_" + nameList[i] + "'> Fear - " + getEmotionPercent(emotionList[i][3]) + "%</dt>").appendTo("#" + nameList[i] + "Chart");
                     // $("<dd><div id='fearbar_" + nameList[i] + "' class='graph_bar neutral_bar' style='width:" + getEmotionPercent(emotionList[i][3]) + "%'> &nbsp </div></dd>").appendTo("#" + nameList[i] + "Chart");
 
-                }
                 $('#chat_' + nameList[0]).text('Can I get a copy of Destiny?')
                 $('#chat_' + nameList[0]).addClass("callout");
             }
@@ -449,6 +472,14 @@
         }
 
         $('document').ready(function(){
+
+            initialize(npcCount);
+            console.log(line);
+            console.log(line[1].name);
+
+
+
+
             $('#startButton').click(function(){
                 document.getElementById('startButton').disabled = true; // Prevents the user from changing the game state 
                 var runIntervalID = window.setInterval(function(){

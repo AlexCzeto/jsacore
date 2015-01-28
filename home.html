@@ -106,7 +106,7 @@
             if (charname == 'Alex' || charname == 'Smith' || charname == 'Johnson') {
                 imagecounter = 1;
             }
-            else if (charname == 'Mary' || charname == 'Lisa' || charname == 'Laura' || charname == 'Sarah' || charname == 'Emilie'){
+            else if (charname == 'Mary' || charname == 'Lisa' || charname == 'Laura' || charname == 'Sarah' || charname == 'Emilie' || charname == "Jennifer"){
                 imagecounter = 2;
             }   
             else if (charname == 'William' || charname == "David" || charname == 'Edward'){
@@ -114,11 +114,11 @@
             }
             
             var emotionalTable = [
-                ['{% static "surveys/TEMP.jpg" %}', '{% static "surveys/TEMP.jpg" %}', '{% static "surveys/distress' + imagecounter + '.jpg" %}', '{% static "surveys/TEMP.jpg" %}', '{% static "surveys/TEMP.jpg" %}'],
-                ['{% static "surveys/TEMP.jpg" %}', '{% static "surveys/TEMP.jpg" %}', '"surveys/distress' + imagecounter + '.jpg"}', '{% static "surveys/TEMP.jpg" %}', '{% static "surveys/TEMP.jpg" %}'],
-                ['{% static "surveys/fear' + imagecounter + '.jpg" %}', '{% static "surveys/fear' + imagecounter + '.jpg" %}', '"surveys/normal' + imagecounter + '.jpg"', '{% static "surveys/hope' + imagecounter + '.jpg" %}', '{% static "surveys/hope' + imagecounter + '.jpg" %}'],
-                ['{% static "surveys/TEMP.jpg" %}', '{% static "surveys/TEMP.jpg" %}', '{% static "surveys/happy' + imagecounter + '.jpg" %}', '{% static "surveys/TEMP.jpg" %}', '{% static "surveys/TEMP.jpg" %}'],
-                ['{% static "surveys/TEMP.jpg" %}', '{% static "surveys/TEMP.jpg" %}', '{% static "surveys/happy' + imagecounter + '.jpg" %}', '{% static "surveys/TEMP.jpg" %}'], ['{% static "surveys/TEMP.jpg" %}']
+                ['"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"', '"surveys/distress' + imagecounter + '.jpg"', '"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"'],
+                ['"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"', '"surveys/distress' + imagecounter + '.jpg"}', '"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"'],
+                ['surveys/fear' + imagecounter + '.jpg', '"surveys/fear' + imagecounter + '.jpg"', 'surveys/normal' + imagecounter + '.jpg', '"surveys/hope' + imagecounter + '.jpg"', '"surveys/hope' + imagecounter + '.jpg"'],
+                ['"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"', '"surveys/happy' + imagecounter + '.jpg"', '"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"'],
+                ['"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"', '"surveys/happy' + imagecounter + '.jpg"', '"surveys/TEMP.jpg"'], ['"surveys/TEMP.jpg"']
             ]
 
 //            console.log("joy: " + joyEmo + "hopeEmo: " + hopeEmo + "sorrow: " + sorrowEmo + "fear: " + fearEmo);
@@ -282,16 +282,6 @@
                     $("<div id='" + nameList[i] + "Bar'> </div>").appendTo("#npcParent" + (i+1));
                     // $("<progress id='health_" + nameList[i] + "' class='healthBar' value='" + healthList[i] + "' max='100'></progress>").appendTo("#" + nameList[i] + "Bar");
 
-                    // $("<dl style='width:100%' id='" + nameList[i] + "Chart' > </dl>").appendTo("#" + nameList[i] + "Bar");
-                    // $("<dt id='joytext_" + nameList[i] + "'> Joy - " + getEmotionPercent(emotionList[i][0]) + "%</dt>").appendTo("#" + nameList[i] + "Chart");
-                    // $("<dd><div id='joybar_" + nameList[i] + "' class='graph_bar neutral_bar' style='width:" + getEmotionPercent(emotionList[i][0]) + "%'> &nbsp </div></dd>").appendTo("#" + nameList[i] + "Chart");
-                    // $("<dt id='hopetext_" + nameList[i] + "'> Hope - " + getEmotionPercent(emotionList[i][1]) + "%</dt>").appendTo("#" + nameList[i] + "Chart");
-                    // $("<dd><div id='hopebar_" + nameList[i] + "' class='graph_bar neutral_bar' style='width:" + getEmotionPercent(emotionList[i][1]) + "%'> &nbsp </div></dd>").appendTo("#" + nameList[i] + "Chart");
-                    // $("<dt id='sorrowtext_" + nameList[i] + "'> Sorrow - " + getEmotionPercent(emotionList[i][2]) + "%</dt>").appendTo("#" + nameList[i] + "Chart");
-                    // $("<dd><div id='sorrowbar_" + nameList[i] + "' class='graph_bar neutral_bar' style='width:" + getEmotionPercent(emotionList[i][2]) + "%'> &nbsp </div></dd>").appendTo("#" + nameList[i] + "Chart");
-                    // $("<dt id='feartext_" + nameList[i] + "'> Fear - " + getEmotionPercent(emotionList[i][3]) + "%</dt>").appendTo("#" + nameList[i] + "Chart");
-                    // $("<dd><div id='fearbar_" + nameList[i] + "' class='graph_bar neutral_bar' style='width:" + getEmotionPercent(emotionList[i][3]) + "%'> &nbsp </div></dd>").appendTo("#" + nameList[i] + "Chart");
-
                 $('#chat_' + nameList[0]).text('Can I get a copy of Destiny?')
                 $('#chat_' + nameList[0]).addClass("callout");
             }
@@ -377,17 +367,7 @@
                                 $('#npcParent' + (i+1)).addClass("passAnimate");
                             }
                         }
-
-
-                      //  console.log(emotionList[i][0])
-                        // $('#joytext_' + nameList[i]).text('Joy - ' + getEmotionPercent(emotionList[i][0]) + '%');
-                        // $('#joybar_'+nameList[i]).width(getEmotionPercent(emotionList[i][0]) + '%');
-                        // $('#hopetext_' + nameList[i]).text('Hope - ' + getEmotionPercent(emotionList[i][1]) + '%');
-                        // $('#hopebar_'+nameList[i]).width(getEmotionPercent(emotionList[i][1]) +'%');
-                        // $('#sorrowtext_' + nameList[i]).text('Sorrow - ' + getEmotionPercent(emotionList[i][2]) + '%');
-                        // $('#sorrowbar_'+nameList[i]).width(getEmotionPercent(emotionList[i][2]) + '%');
-                        // $('#feartext_' + nameList[i]).text('Fear - ' + getEmotionPercent(emotionList[i][3]) + '%');
-                        // $('#fearbar_'+nameList[i]).width(getEmotionPercent(emotionList[i][3]) + '%');                        
+                  
                     }
             }
             xmlhttp.send();

@@ -36,12 +36,35 @@
 
             function makeNPC (position) {
                 var name = nameList.splice(getRandomInt(0, nameList.length-1), 1);
-                var npc_in_line = new npc(name[0]); //because splice returns an array
+                var npc_in_line = new npc(name[0], [1.0, 1.0, 1.0]); //because splice returns an array
                 return npc_in_line;
             }
             //Defining NPC class
-            function npc(name) {
+            function npc(name, resources) {
                 this.name = name;
+                this.emotion = [0,0,0,0];
+                weight1  = Math.random();
+                weight2 = Math.random();
+                weight3 = Math.random();
+                this.resourceWeights = [weight1, weight2, weight3];
+                this.resourceVector = resources;
+                this.newResourceVector = [];
+                this.nextAction = "Wait";
+                this.getAction = function() {
+                    return this.nextAction;
+                }
+                this.getResource = function() {
+                    return this.resourceVector;
+                }
+                this.waitCost = function() {
+                    return (-0.3)*this.resourceWeights[2];
+                }
+                this.actionCost = function() {
+                    return ((this.newResourceVector[0]-this.resourceVector[0])*this.resourceWeights[0] +
+            (this.newResourceVector[1] - this.resourceVector[1])*this.resourceWeights[1] +
+            (this.newResourceVector[2]- this.resourceVector[2])*this.resourceWeights[2])
+                }
+
             }
 
             //Initialize Function
@@ -241,15 +264,15 @@
 
         }
 
-        function clearCallouts (nameList) {
-            for (var i = nameList.length - 1; i >= 0; i--) {
-                $('#chat_' + nameList[i]).text('');
-                $('#chat_' + nameList[i]).removeClass("callout");
+        function clearCallouts () {
+            for (var i = line.length - 1; i >= 0; i--) {
+                $('#chat_' + line[i].name).text('');
+                $('#chat_' + line[i].name).removeClass("callout");
             };
         }
 
-        function removeAnimate (nameList) {
-            for (var i = nameList.length; i >= 0; i--) {
+        function removeAnimate () {
+            for (var i = line.length; i >= 0; i--) {
                 $('#npcParent' + i).removeClass('passAnimate');
             };   
         }
@@ -277,13 +300,12 @@
                     $("<div id='chat_" + line[i].name + "' class='calloutFrame top'> </div>").appendTo("#npcParent" + (i+1));
 
                     $("<h4 style='text-align:center'><strong>" + line[i].name +" </strong></h4>").appendTo("#npcParent" + (i+1));
-                    $("<img id='npcFace"+ nameList[i] + "' src='" + getDynamicFace(emotionList[i], nameList[i]) + "' class='npcImage goodrepu' />").appendTo("#npcParent" + (i+1));
-                    $("<img id='npcHealth"+ nameList[i] + "' src='surveys/health.png' class='healthbox  ' />").appendTo("#npcParent" + (i+1));
+                    $("<img id='npcFace"+ line[i].name + "' src='" + getDynamicFace(emotionList[i], line[i].name) + "' class='npcImage goodrepu' />").appendTo("#npcParent" + (i+1));
+                    $("<img id='npcHealth"+ line[i].name + "' src='surveys/health.png' class='healthbox  ' />").appendTo("#npcParent" + (i+1));
 
-                $('#chat_' + nameList[0]).text('Can I get a copy of Destiny?')
-                $('#chat_' + nameList[0]).addClass("callout");
+                $('#chat_' + line[0].name).text('Can I get a copy of Destiny?')
+                $('#chat_' + line[0].name).addClass("callout");
             }
-            xmlhttp.send();
         }
 
 
@@ -312,50 +334,50 @@
             The next step button is disabled such that the user cannot ruin the animations by spamming the button.
             The changes made in the specific steps are in their respective functions as a matter of organization. */
 
-                    var npcCount = npcData["npc_count"];
-                    var nameList = npcData["names"];
-                    var actionList = npcData["actions"];
-                    var emotionList = npcData["emotions"];
-                    var healthList = npcData["health"];
-                    var repuList = npcData["repu"];
-                    var gameStatus = npcData["gameStatus"];
-                    var passingNPCs = npcData["passing_list"];
+                    // var npcCount = npcData["npc_count"];
+                    // var nameList = npcData["names"];
+                    // var actionList = npcData["actions"];
+                    // var emotionList = npcData["emotions"];
+                    // var healthList = npcData["health"];
+                    // var repuList = npcData["repu"];
+                    // var gameStatus = npcData["gameStatus"];
+                    // var passingNPCs = npcData["passing_list"];
 
                     if(gameStatus == 'penultimate'){
-                        penultimateUpdate(passingNPCs, nameList);
+                        penultimateUpdate(passingNPCs);
                     } else if (gameStatus == 'final'){
                         finalUpdate(npcCount, runIntervalID);
-                        clearCallouts(nameList);
-                        removeAnimate(nameList);
+                        clearCallouts();
+                        removeAnimate();
                     } 
 
                     if (gameStatus == 'final'){
-                        $('#chat_' + nameList[0]).text('Can I get a copy of Destiny?');
-                        $('#chat_' + nameList[0]).addClass("callout");
+                        $('#chat_' + line[0].name).text('Can I get a copy of Destiny?');
+                        $('#chat_' + line[0].name).addClass("callout");
                     }
 
 
 
                     for(var i = 0; i < npcCount; i++){
-                        document.getElementById('npcFace' + nameList[i]).src = getDynamicFace(emotionList[i], nameList[i]);
+                        document.getElementById('npcFace' + line[i].name).src = getDynamicFace(emotionList[i], line[i].name);
                         //Code for Reputation changes
-                        if (repuList[i] < 70) {
-                            $('#npcFace' + nameList[i]).removeClass("goodrepu");
-                            $('#npcFace' + nameList[i]).removeClass("sosorepu");
-                            $('#npcFace' + nameList[i]).addClass("badrepu");
-                        } else if (repuList[i] < 100) {
-                            $('#npcFace' + nameList[i]).removeClass("goodrepu");
-                            $('#npcFace' + nameList[i]).addClass("sosorepu");
+                        if (line[i].resourceVector[2] < 70) {
+                            $('#npcFace' + line[i].name).removeClass("goodrepu");
+                            $('#npcFace' + line[i].name).removeClass("sosorepu");
+                            $('#npcFace' + line[i].name).addClass("badrepu");
+                        } else if (line[i].resourceVector[2] < 100) {
+                            $('#npcFace' + line[i].name).removeClass("goodrepu");
+                            $('#npcFace' + line[i].name).addClass("sosorepu");
                         }
                         //End code for Reputation changes
                         
                         if (gameStatus == 'protest?'){
                             if(actionList[i] == 'Protest'){
-                                $('#chat_' + nameList[i]).text(getProtestText());
-                                $('#chat_' + nameList[i]).addClass("callout");
+                                $('#chat_' + line[i].name).text(getProtestText());
+                                $('#chat_' + line[i].name).addClass("callout");
                             } else {
-                                $('#chat_' + nameList[i]).text('');
-                                $('#chat_' + nameList[i]).removeClass("callout");
+                                $('#chat_' + line[i].name).text('');
+                                $('#chat_' + line[i].name).removeClass("callout");
                             }
                             if(actionList[i] == 'Pass'){
                                 $('#npcParent' + (i+1)).addClass("passAnimate");
@@ -365,7 +387,7 @@
                     }
         }
 
-        function penultimateUpdate(passingNPCs, nameList){
+        function penultimateUpdate(passingNPCs){
             /* For each NPC that is made a successful pass, it wil animate the swap in line
             as well as switch the names on the side bar. The nextStep button is only 
             reactivated after the animation is finished to prevent overlapping animations. */
@@ -394,11 +416,10 @@
                 $('#npcParent'+ passingIndex).attr('id', 'npcParent'+ (passingIndex + 1));                                
                 $('#ptemp').attr('id', 'npcParent' + passingIndex);
 
-                $('#chat_' + nameList[passingIndex]).text(getPassedText());
-                $('#chat_' + nameList[passingIndex]).addClass("callout");
+                $('#chat_' + line[passingIndex].name).text(getPassedText());
+                $('#chat_' + line[passingIndex].name).("callout");
             }
-            removeAnimate(nameList);
-            console.log(nameList)
+            removeAnimate();
 
         }
 
@@ -445,9 +466,27 @@
 
         $('document').ready(function(){
 
-            initialize(npcCount);
+            initialize(npcCount); //The value of NPC count is defined at the start. 
             console.log(line);
             console.log(line[1].name);
+            console.log(line[2].resourceVector[2]);
+
+            if (gameStatus == "initial") {
+                console.log(gameStatus);
+                gameStatus = "protest";
+            }
+            else if (gameStatus == "protest") {
+                console.log(gameStatus);
+                gameStatus = "penultimate";
+            }
+            else if (gameStatus == "penultimate") {
+                console.log(gameStatus);
+                gameStatus = "final";
+            }
+            else if (gameStatus == "final") {
+                console.log(gameStatus);
+                gameStatus = "inital";
+            }
 
 
 

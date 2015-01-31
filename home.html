@@ -31,8 +31,7 @@
 
         var gameStatus = 'initial';
         var line = [];
-
-        var emotionList = [[0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0]];
+        var passingNPCs = [];
 
             function makeNPC (position) {
                 var name = nameList.splice(getRandomInt(0, nameList.length-1), 1);
@@ -285,22 +284,12 @@
             Creates a div hirearcy for each NPC such that the elements can be modified and adapted as they move through the line.
             If the game is over, it will create a button to restart the game. */
 
-
-                // var npcData = JSON.parse(xmlhttp.response);
-                // var npcCount = npcData["npc_count"];
-                // var nameList = npcData["names"];
-                // var actionList = npcData["actions"];
-                // var emotionList = npcData["emotions"];
-                // var healthList = npcData["health"];
-                // var gameStatus = npcData["gameStatus"];
-                // var passingNPCs = npcData["passing_list"];
-
-                for(var i = 0; i < npcCount; i++){
+                for(var i = 0; i < line.length; i++){
                     $("<div id='npcParent" + (i+1) + "' class='npc-container npcHolder'> </div>").appendTo("#npcDiv");
                     $("<div id='chat_" + line[i].name + "' class='calloutFrame top'> </div>").appendTo("#npcParent" + (i+1));
 
                     $("<h4 style='text-align:center'><strong>" + line[i].name +" </strong></h4>").appendTo("#npcParent" + (i+1));
-                    $("<img id='npcFace"+ line[i].name + "' src='" + getDynamicFace(emotionList[i], line[i].name) + "' class='npcImage goodrepu' />").appendTo("#npcParent" + (i+1));
+                    $("<img id='npcFace"+ line[i].name + "' src='" + getDynamicFace(line[i].emotion, line[i].name) + "' class='npcImage goodrepu' />").appendTo("#npcParent" + (i+1));
                     $("<img id='npcHealth"+ line[i].name + "' src='surveys/health.png' class='healthbox  ' />").appendTo("#npcParent" + (i+1));
 
                 $('#chat_' + line[0].name).text('Can I get a copy of Destiny?')
@@ -334,19 +323,10 @@
             The next step button is disabled such that the user cannot ruin the animations by spamming the button.
             The changes made in the specific steps are in their respective functions as a matter of organization. */
 
-                    // var npcCount = npcData["npc_count"];
-                    // var nameList = npcData["names"];
-                    // var actionList = npcData["actions"];
-                    // var emotionList = npcData["emotions"];
-                    // var healthList = npcData["health"];
-                    // var repuList = npcData["repu"];
-                    // var gameStatus = npcData["gameStatus"];
-                    // var passingNPCs = npcData["passing_list"];
-
                     if(gameStatus == 'penultimate'){
-                        penultimateUpdate(passingNPCs);
+                        penultimateUpdate(passingNPCs, nameList);
                     } else if (gameStatus == 'final'){
-                        finalUpdate(npcCount, runIntervalID);
+                        finalUpdate(runIntervalID);
                         clearCallouts();
                         removeAnimate();
                     } 
@@ -358,8 +338,8 @@
 
 
 
-                    for(var i = 0; i < npcCount; i++){
-                        document.getElementById('npcFace' + line[i].name).src = getDynamicFace(emotionList[i], line[i].name);
+                    for(var i = 0; i < line.length; i++){
+                        document.getElementById('npcFace' + line[i].name).src = getDynamicFace(line[i].emotion, line[i].name);
                         //Code for Reputation changes
                         if (line[i].resourceVector[2] < 70) {
                             $('#npcFace' + line[i].name).removeClass("goodrepu");
@@ -417,13 +397,13 @@
                 $('#ptemp').attr('id', 'npcParent' + passingIndex);
 
                 $('#chat_' + line[passingIndex].name).text(getPassedText());
-                $('#chat_' + line[passingIndex].name).("callout");
+                $('#chat_' + line[passingIndex].name).addClass("callout");
             }
             removeAnimate();
 
         }
 
-        function finalUpdate(npcCount, runIntervalID){
+        function finalUpdate(runIntervalID){
             /* When it's time for the NPC in first place to receive their item, they are no longer included in the list of
             npcs, so they are removed from the layout by a fade out, and all of the NPCs underneath are moved upward to 
             take the higher positions.  In the case that the line is now empty, the game over text and button will appear so that
@@ -438,11 +418,11 @@
                 npcPanel.parentNode.removeChild(npcPanel);                                    
                 $('.npc-container').css('left', '0px');
 
-                for(var i = 2; i <=npcCount + 1; i++){
+                for(var i = 2; i <=line.length + 1; i++){
                     $('#npcParent' + i).attr('id', 'npcParent' + (i-1));
                 }
             });
-            if(npcCount == 0){
+            if(line.length == 0){
                 setUpEndGame(runIntervalID);
             }
         }
@@ -464,6 +444,91 @@
             }
         }
 
+        function nextStep () {  
+            if (gameStatus == "initial") {
+                console.log(gameStatus);
+                for (var indx = 1; indx < line.length; indx++){
+                    line[indx].newResourceVector = [line[indx].resourceVector[0]-0.05, line[indx].resourceVector[1]-0.4, line[indx-1].resourceVector[2]];
+                    console.log(line[indx].actionCost())
+                    if (line[indx].actionCost() > 0) {
+                        line[indx].nextAction = 'Pass'
+                        //line[indx].computeEmotion(0.95) //0.95 is the degree of certaininty. TODO: We have to find a way to compute it. 
+                    };
+                };
+                gameStatus = "protest";
+            }
+            else if (gameStatus == "protest") {
+                console.log(gameStatus);
+                for (var indx = line.length - 2; indx >= 0; indx--) {
+                    if (line[indx+1].nextAction == "Pass") {
+                        //print "Someoen passing " , line[indx].name
+                        line[indx].newResourceVector = [line[indx].resourceVector[0]-0.05, line[indx].resourceVector[1]-0.10, line[indx].resourceVector[2]];
+                        //print "\n\n\n Action Cost: " + str(line[indx].actionCost())
+                        //print "\n\n\n Wait Cost: " + str(line[indx].waitCost())
+                        if (line[indx].actionCost() > line[indx].waitCost()){
+                            line[indx].nextAction = 'Protest';
+                            //line[indx].computeEmotion(0.95);
+                        }
+                        else {
+                            line[indx].nextAction = "Wait";
+                            line[indx].newResourceVector = [line[indx].resourceVector[0], line[indx].resourceVector[1], line[indx+1].resourceVector[2]];
+                            //line[indx].computeEmotion(0.95);
+                        };
+                    };
+
+                };
+                gameStatus = "penultimate";
+            }
+            else if (gameStatus == "penultimate") {
+                console.log(gameStatus);
+                for (var indx = 1; indx < line.length; indx++) {
+                    if (line[indx].nextAction == 'Pass' && line[indx-1].nextAction == 'Protest'){
+                        if (Math.random() < 0.50) {
+                            line[indx].nextAction = 'Pass_Success';
+                            //line[indx].computeEmotion(1);
+                            line[indx-1].nextAction = 'Wait';
+                            line[indx-1].newResourceVector[2] = line[indx].resourceVector[2]; //The line[indx] goes back
+                            //line[indx-1].computeEmotion(1);
+                            line[indx].resourceVector = line[indx].newResourceVector;   //This is to make the new resources as the current resources
+                            line[indx-1].resourceVector = line[indx-1].newResourceVector;
+                            line[indx], line[indx-1] = line[indx-1], line[indx]; //Code to swap the 2 positions
+                        }
+                        else {
+                            line[indx].nextAction = 'Pass_Fail'
+                            line[indx].resourceVector = [line[indx].newResourceVector[0], line[indx].newResourceVector[1], line[indx].resourceVector[2]];
+                        };
+                        //line[indx].computeEmotion(1);
+                    }
+                    else if (line[indx].nextAction == 'Pass' && line[indx-1].nextAction == 'Wait'){
+                        line[indx].nextAction = 'Pass_Success';
+                        //line[indx].computeEmotion(1);
+                        //line[indx-1].computeEmotion(1);
+                        line[indx-1].resourceVector = line[indx-1].newResourceVector;
+                        line[indx].resourceVector = line[indx].newResourceVector;   //This is to make the new resources as the current resources
+                        line[indx], line[indx-1] = line[indx-1], line[indx]; //Code to swap the 2 positions
+                    }
+                } 
+                for (var indx = 1; indx < line.length; indx++){
+                    if(line[indx].getAction() == 'Pass_Success'){
+                        passingNPCs.push(indx + 1);
+                    };
+                };   
+                gameStatus = "final";
+            }
+            else if (gameStatus == "final") {
+                console.log(gameStatus);
+                line.splice(0,1);
+                for (var indx = 0; indx < line.length; indx ++) {
+                    line[indx].nextAction = 'Wait';
+                    line[indx].newResourceVector = [line[indx].resourceVector[0], line[indx].resourceVector[1], 1.0/(indx+1)];
+                    //line[indx].computeEmotion(1); //All happy coz their position is going up
+                    line[indx].resourceVector = line[indx].newResourceVector;
+                }
+                gameStatus = "initial";
+                console.log(gameStatus);
+            }  
+        }
+
         $('document').ready(function(){
 
             initialize(npcCount); //The value of NPC count is defined at the start. 
@@ -471,29 +536,11 @@
             console.log(line[1].name);
             console.log(line[2].resourceVector[2]);
 
-            if (gameStatus == "initial") {
-                console.log(gameStatus);
-                gameStatus = "protest";
-            }
-            else if (gameStatus == "protest") {
-                console.log(gameStatus);
-                gameStatus = "penultimate";
-            }
-            else if (gameStatus == "penultimate") {
-                console.log(gameStatus);
-                gameStatus = "final";
-            }
-            else if (gameStatus == "final") {
-                console.log(gameStatus);
-                gameStatus = "inital";
-            }
-
-
-
-
             $('#startButton').click(function(){
                 document.getElementById('startButton').disabled = true; // Prevents the user from changing the game state 
                 var runIntervalID = window.setInterval(function(){
+                    nextStep();
+                    console.log(line);
                     updateNPCs(runIntervalID);
                 }, 2000);  //1.5 second delay
                 

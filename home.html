@@ -63,6 +63,41 @@
             (this.newResourceVector[1] - this.resourceVector[1])*this.resourceWeights[1] +
             (this.newResourceVector[2]- this.resourceVector[2])*this.resourceWeights[2])
                 }
+                this.computeEmotion = function(expectation) {
+                    for (var indx = 0; indx < resourceVector.length; indx++) {
+                        var desire = (this.newResourceVector[indx] - this.resourceVector[indx])*this.resourceWeights[indx];
+                        if (desire > 0 && expectation == 1) {
+                            this.emotion[0] += desire;
+                        }
+                        else if (desire > 0 && expectation < 1) {
+                            this.emotion[1] += desire * expectation;
+                        }
+                        else if (desire < 0 && expectation == 1) {
+                            this.emotion[2] += desire;
+                        }
+                        else if (desire < 0 && expectation < 1) {
+                            this.emotion[3] += desire * expectation;
+                        }
+
+                        if ((Math.abs(this.emotion[0])-Math.abs(this.emotion[2])) > 0){
+                                this.emotion[0] = this.emotion[0]-Math.abs(this.emotion[2]);
+                                this.emotion[2] = 0;
+                            }
+                        else {
+                            this.emotion[2] = Math.abs(this.emotion[2])-this.emotion[0];
+                            this.emotion[0] = 0;
+                        }
+
+                        if ((this.emotion[1]-Math.abs(this.emotion[3])) > 0) {
+                            this.emotion[1] = this.emotion[1]-Math.abs(this.emotion[3]);
+                            this.emotion[3] = 0;
+                        }
+                        else {
+                            this.emotion[3] = Math.abs(this.emotion[3])-this.emotion[1];
+                            this.emotion[1] = 0;
+                        }
+                    }
+                }
 
             }
 
@@ -452,7 +487,7 @@
                     console.log(line[indx].actionCost())
                     if (line[indx].actionCost() > 0) {
                         line[indx].nextAction = 'Pass'
-                        //line[indx].computeEmotion(0.95) //0.95 is the degree of certaininty. TODO: We have to find a way to compute it. 
+                        line[indx].computeEmotion(0.95) //0.95 is the degree of certaininty. TODO: We have to find a way to compute it. 
                     };
                 };
                 gameStatus = "protest";
@@ -467,12 +502,12 @@
                         //print "\n\n\n Wait Cost: " + str(line[indx].waitCost())
                         if (line[indx].actionCost() > line[indx].waitCost()){
                             line[indx].nextAction = 'Protest';
-                            //line[indx].computeEmotion(0.95);
+                            line[indx].computeEmotion(0.95);
                         }
                         else {
                             line[indx].nextAction = "Wait";
                             line[indx].newResourceVector = [line[indx].resourceVector[0], line[indx].resourceVector[1], line[indx+1].resourceVector[2]];
-                            //line[indx].computeEmotion(0.95);
+                            line[indx].computeEmotion(0.95);
                         };
                     };
 
@@ -485,10 +520,10 @@
                     if (line[indx].nextAction == 'Pass' && line[indx-1].nextAction == 'Protest'){
                         if (Math.random() < 0.50) {
                             line[indx].nextAction = 'Pass_Success';
-                            //line[indx].computeEmotion(1);
+                            line[indx].computeEmotion(1);
                             line[indx-1].nextAction = 'Wait';
                             line[indx-1].newResourceVector[2] = line[indx].resourceVector[2]; //The line[indx] goes back
-                            //line[indx-1].computeEmotion(1);
+                            line[indx-1].computeEmotion(1);
                             line[indx].resourceVector = line[indx].newResourceVector;   //This is to make the new resources as the current resources
                             line[indx-1].resourceVector = line[indx-1].newResourceVector;
                             line[indx], line[indx-1] = line[indx-1], line[indx]; //Code to swap the 2 positions
@@ -497,12 +532,12 @@
                             line[indx].nextAction = 'Pass_Fail'
                             line[indx].resourceVector = [line[indx].newResourceVector[0], line[indx].newResourceVector[1], line[indx].resourceVector[2]];
                         };
-                        //line[indx].computeEmotion(1);
+                        line[indx].computeEmotion(1);
                     }
                     else if (line[indx].nextAction == 'Pass' && line[indx-1].nextAction == 'Wait'){
                         line[indx].nextAction = 'Pass_Success';
-                        //line[indx].computeEmotion(1);
-                        //line[indx-1].computeEmotion(1);
+                        line[indx].computeEmotion(1);
+                        line[indx-1].computeEmotion(1);
                         line[indx-1].resourceVector = line[indx-1].newResourceVector;
                         line[indx].resourceVector = line[indx].newResourceVector;   //This is to make the new resources as the current resources
                         line[indx], line[indx-1] = line[indx-1], line[indx]; //Code to swap the 2 positions
@@ -521,7 +556,7 @@
                 for (var indx = 0; indx < line.length; indx ++) {
                     line[indx].nextAction = 'Wait';
                     line[indx].newResourceVector = [line[indx].resourceVector[0], line[indx].resourceVector[1], 1.0/(indx+1)];
-                    //line[indx].computeEmotion(1); //All happy coz their position is going up
+                    line[indx].computeEmotion(1); //All happy coz their position is going up
                     line[indx].resourceVector = line[indx].newResourceVector;
                 }
                 gameStatus = "initial";

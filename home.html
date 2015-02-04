@@ -64,7 +64,7 @@
             (this.newResourceVector[2]- this.resourceVector[2])*this.resourceWeights[2])
                 }
                 this.computeEmotion = function(expectation) {
-                    for (var indx = 0; indx < resourceVector.length; indx++) {
+                    for (var indx = 0; indx < this.resourceVector.length; indx++) {
                         var desire = (this.newResourceVector[indx] - this.resourceVector[indx])*this.resourceWeights[indx];
                         if (desire > 0 && expectation == 1) {
                             this.emotion[0] += desire;
@@ -116,17 +116,7 @@
         }
 
         function getEmotionPercent(emotionString){ 
-            for(var i = 0; i < emotionString.length ; i ++){
-                if(emotionString.charAt(i) == '.'){
-                    if((emotionString.charAt(i+1) == '0') && (emotionString.substring(i+1).length > 1)){ //this sends 4% instead of 04%
-                        return boost(emotionString.substring(i+2));
-                    }
-                    if((emotionString.charAt(i+1) != '0') && (emotionString.substring(i+1).length == 1)){ //for 0.4, it returns 40% instead of 4%
-                        return boost(emotionString.charAt(i+1) + '0');
-                    }
-                    return boost(emotionString.substring(i+1));
-                }
-            }
+           return 200*emotionString;
         }
 
         function boost(emotionString){
@@ -152,12 +142,6 @@
             var sorrowEmo = parseInt(getEmotionPercent(emotionList[2]));
             var fearEmo = parseInt(getEmotionPercent(emotionList[3]));
 
-            var normalRandomInt = getRandomInt(0,2)
-            var joyRandomInt = getRandomInt(0,2)
-            var sorrowRandomInt = getRandomInt(0,2)
-            var hopeRandomInt = getRandomInt(0,2)
-            var fearRandomInt = getRandomInt(0,2)
-
             var imagecounter = 4;
 
             if (charname == 'Alex' || charname == 'Smith' || charname == 'Johnson') {
@@ -171,14 +155,12 @@
             }
             
             var emotionalTable = [
-                ['"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"', '"surveys/distress' + imagecounter + '.jpg"', '"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"'],
-                ['"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"', '"surveys/distress' + imagecounter + '.jpg"}', '"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"'],
-                ['surveys/fear' + imagecounter + '.jpg', '"surveys/fear' + imagecounter + '.jpg"', 'surveys/normal' + imagecounter + '.jpg', '"surveys/hope' + imagecounter + '.jpg"', '"surveys/hope' + imagecounter + '.jpg"'],
-                ['"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"', '"surveys/happy' + imagecounter + '.jpg"', '"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"'],
-                ['"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"', '"surveys/happy' + imagecounter + '.jpg"', '"surveys/TEMP.jpg"'], ['"surveys/TEMP.jpg"']
+                ['"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"', 'surveys/distress' + imagecounter + '.jpg', '"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"'],
+                ['"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"', 'surveys/distress' + imagecounter + '.jpg', '"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"'],
+                ['surveys/fear' + imagecounter + '.jpg', 'surveys/fear' + imagecounter + '.jpg', 'surveys/normal' + imagecounter + '.jpg', 'surveys/hope' + imagecounter + '.jpg', 'surveys/hope' + imagecounter + '.jpg'],
+                ['"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"', 'surveys/happy' + imagecounter + '.jpg', '"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"'],
+                ['"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"', 'surveys/happy' + imagecounter + '.jpg', '"surveys/TEMP.jpg"'], ['"surveys/TEMP.jpg"']
             ]
-
-//            console.log("joy: " + joyEmo + "hopeEmo: " + hopeEmo + "sorrow: " + sorrowEmo + "fear: " + fearEmo);
 
             var x = 2;
             var y = 2;
@@ -228,46 +210,9 @@
             }
 
 
-           // console.log("x: " + x + " y: " + y + "emTab[x,y]: " + emotionalTable[x][y]);
             return emotionalTable[x][y];
         }
 
-        function getImageClass(emotionList){
-            var joyEmo = parseInt(getEmotionPercent(emotionList[0]));
-            var hopeEmo = parseInt(getEmotionPercent(emotionList[1]));
-            var sorrowEmo = parseInt(getEmotionPercent(emotionList[2]));
-            var fearEmo = parseInt(getEmotionPercent(emotionList[3]));
-            var maxEmo = joyEmo;
-            var emoURL = "joy"; //joy
-            if(maxEmo < hopeEmo){
-                maxEmo = hopeEmo;
-                emoURL = "hope"  //actually angry face
-            } 
-            if(maxEmo < sorrowEmo){
-                maxEmo = sorrowEmo;
-                emoURL = "sorrow";
-            }
-            if(maxEmo < fearEmo){
-                emoURL = "fear"; //fear face
-            }
-            //console.log(emoURL);
-            return emoURL;
-        }
-
-        function getAlertClass(action){
-            // Returns the appropriate css bootstrap class for an alert element for name side bar.
-            if(action == 'Wait'){
-                return 'alert alert-info';
-            } else if (action == 'Pass'){
-                return 'alert alert-warning';
-            } else if (action == 'Pass_Success'){
-                return 'alert alert-success';
-            } else if (action == 'Protest'){
-                return 'alert alert-danger';
-            } else if (action == 'Pass_Fail'){
-                return 'pass-fail-alert'
-            } 
-        }
 
         function infoPopup(){
             var width = window.innerWidth;
@@ -337,15 +282,6 @@
             /* The JSON request resets the game on the python side, reinitializing the NPCs.
             The game over text and button are removed and replaced with the NPC divs created
             in the initializeNPC function. */
-            
-
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.open("GET", "surveys/reinitialize", true);
-            xmlhttp.onload=function(){
-                var npcData = JSON.parse(xmlhttp.response);
-                var npcCount = npcData["lineLength"];
-            }
-            xmlhttp.send();              
 
             $('#newGameDiv').css('display', 'none')
             repeat = false; //Setting it to false so that the function does not repeat again (Added by Yathi)
@@ -366,7 +302,7 @@
                         removeAnimate();
                     } 
 
-                    if (gameStatus == 'final'){
+                    if (gameStatus == 'final' && line.length != 0){
                         $('#chat_' + line[0].name).text('Can I get a copy of Destiny?');
                         $('#chat_' + line[0].name).addClass("callout");
                     }
@@ -444,7 +380,12 @@
             take the higher positions.  In the case that the line is now empty, the game over text and button will appear so that
             the user can start a new game. Currently, the new game button doesn't always work, and I have no idea what it's 
             successful execution is dependant on. */
-            var panelWidth = $('#npcParent1').outerWidth(true);
+            
+            if(line.length == 0){
+                setUpEndGame(runIntervalID);
+            }
+            else {
+              var panelWidth = $('#npcParent1').outerWidth(true);
             $.when(
                 $('#npcParent1').animate({opacity: 0}, 750),
                 $('.npc-container').not('#npcParent1').animate({left: -panelWidth}, 750)).then(
@@ -456,9 +397,7 @@
                 for(var i = 2; i <=line.length + 1; i++){
                     $('#npcParent' + i).attr('id', 'npcParent' + (i-1));
                 }
-            });
-            if(line.length == 0){
-                setUpEndGame(runIntervalID);
+            });  
             }
         }
 
@@ -482,12 +421,13 @@
         function nextStep () {  
             if (gameStatus == "initial") {
                 console.log(gameStatus);
-                for (var indx = 1; indx < line.length; indx++){
-                    line[indx].newResourceVector = [line[indx].resourceVector[0]-0.05, line[indx].resourceVector[1]-0.4, line[indx-1].resourceVector[2]];
-                    console.log(line[indx].actionCost())
-                    if (line[indx].actionCost() > 0) {
-                        line[indx].nextAction = 'Pass'
-                        line[indx].computeEmotion(0.95) //0.95 is the degree of certaininty. TODO: We have to find a way to compute it. 
+                for (var indx = 0; indx < line.length; indx++){
+                    if (indx != 0) {
+                        line[indx].newResourceVector = [line[indx].resourceVector[0]-0.05, line[indx].resourceVector[1]-0.4, line[indx-1].resourceVector[2]];
+                        if (line[indx].actionCost() > 0) {
+                            line[indx].nextAction = 'Pass'
+                            line[indx].computeEmotion(0.95) //0.95 is the degree of certaininty. TODO: We have to find a way to compute it. 
+                        };
                     };
                 };
                 gameStatus = "protest";
@@ -516,7 +456,8 @@
             }
             else if (gameStatus == "penultimate") {
                 console.log(gameStatus);
-                for (var indx = 1; indx < line.length; indx++) {
+                for (var indx = 0; indx < line.length; indx++) {
+                    if (indx != 0) {
                     if (line[indx].nextAction == 'Pass' && line[indx-1].nextAction == 'Protest'){
                         if (Math.random() < 0.50) {
                             line[indx].nextAction = 'Pass_Success';
@@ -526,7 +467,9 @@
                             line[indx-1].computeEmotion(1);
                             line[indx].resourceVector = line[indx].newResourceVector;   //This is to make the new resources as the current resources
                             line[indx-1].resourceVector = line[indx-1].newResourceVector;
-                            line[indx], line[indx-1] = line[indx-1], line[indx]; //Code to swap the 2 positions
+                            var tempPerson = line[indx];
+                            line[indx] = line[indx-1]; //Code to swap the 2 positions
+                            line[indx-1] = tempPerson;
                         }
                         else {
                             line[indx].nextAction = 'Pass_Fail'
@@ -540,13 +483,19 @@
                         line[indx-1].computeEmotion(1);
                         line[indx-1].resourceVector = line[indx-1].newResourceVector;
                         line[indx].resourceVector = line[indx].newResourceVector;   //This is to make the new resources as the current resources
-                        line[indx], line[indx-1] = line[indx-1], line[indx]; //Code to swap the 2 positions
+                        var tempPerson = line[indx];
+                            line[indx] = line[indx-1]; //Code to swap the 2 positions
+                            line[indx-1] = tempPerson;
                     }
                 } 
-                for (var indx = 1; indx < line.length; indx++){
+                }
+                passingNPCs = [];
+                for (var indx = 0; indx < line.length; indx++){
+                    if (indx != 0) {
                     if(line[indx].getAction() == 'Pass_Success'){
                         passingNPCs.push(indx + 1);
                     };
+                };
                 };   
                 gameStatus = "final";
             }
@@ -567,10 +516,6 @@
         $('document').ready(function(){
 
             initialize(npcCount); //The value of NPC count is defined at the start. 
-            console.log(line);
-            console.log(line[1].name);
-            console.log(line[2].resourceVector[2]);
-
             $('#startButton').click(function(){
                 document.getElementById('startButton').disabled = true; // Prevents the user from changing the game state 
                 var runIntervalID = window.setInterval(function(){

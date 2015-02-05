@@ -65,7 +65,18 @@
                 }
                 this.computeEmotion = function(expectation) {
                     for (var indx = 0; indx < this.resourceVector.length; indx++) {
-                        var desire = (this.newResourceVector[indx] - this.resourceVector[indx])*this.resourceWeights[indx];
+                        if (indx == 2) {
+                            var desire = (this.resourceVector[indx] - this.newResourceVector[indx])*this.resourceWeights[indx]*(-1); //This is to compensate for desire going up when position goes down
+                        }
+                        else {
+                            
+                            var desire = (this.newResourceVector[indx] - this.resourceVector[indx])*this.resourceWeights[indx];
+                            
+                        };
+                        console.log("For indx " + indx + " the desire is " + desire);
+                        console.log("New value of resource " + this.newResourceVector[indx]);
+                        console.log("Current value of resource " + this.resourceVector[indx]);
+
                         if (desire > 0 && expectation == 1) {
                             this.emotion[0] += desire;
                         }
@@ -77,7 +88,8 @@
                         }
                         else if (desire < 0 && expectation < 1) {
                             this.emotion[3] += desire * expectation;
-                        }
+                        } 
+                        console.log('Raw emotion : ' + this.emotion);
 
                         if ((Math.abs(this.emotion[0])-Math.abs(this.emotion[2])) > 0){
                                 this.emotion[0] = this.emotion[0]-Math.abs(this.emotion[2]);
@@ -96,6 +108,8 @@
                             this.emotion[3] = Math.abs(this.emotion[3])-this.emotion[1];
                             this.emotion[1] = 0;
                         }
+
+                        console.log('Refined Emotion : ' + this.emotion);
                     }
                 }
 
@@ -106,6 +120,7 @@
                 for (var count = 0; count < numInLine; count++) {
                     line.push(makeNPC(count));
                 }
+                initializeNPCs();
             }
 
 
@@ -288,28 +303,15 @@
             initializeNPCs();
         }
 
-        function updateNPCs(runIntervalID){
+        function updateNPCs(){
             /* Called everytime the nextStep button is pressed, which represents the change in the game state
             in the model. All of the npc information that needs to be changed in the UI is fetched from a JSON call.
             The next step button is disabled such that the user cannot ruin the animations by spamming the button.
             The changes made in the specific steps are in their respective functions as a matter of organization. */
 
-                    if(gameStatus == 'penultimate'){
-                        penultimateUpdate(passingNPCs, nameList);
-                    } else if (gameStatus == 'final'){
-                        finalUpdate(runIntervalID);
-                        clearCallouts();
-                        removeAnimate();
-                    } 
-
-                    if (gameStatus == 'final' && line.length != 0){
-                        $('#chat_' + line[0].name).text('Can I get a copy of Destiny?');
-                        $('#chat_' + line[0].name).addClass("callout");
-                    }
-
-
-
                     for(var i = 0; i < line.length; i++){
+                        console.log(line[i]);
+                        
                         document.getElementById('npcFace' + line[i].name).src = getDynamicFace(line[i].emotion, line[i].name);
                         //Code for Reputation changes
                         if (line[i].resourceVector[2] < 70) {
@@ -323,16 +325,7 @@
                         //End code for Reputation changes
                         
                         if (gameStatus == 'protest?'){
-                            if(actionList[i] == 'Protest'){
-                                $('#chat_' + line[i].name).text(getProtestText());
-                                $('#chat_' + line[i].name).addClass("callout");
-                            } else {
-                                $('#chat_' + line[i].name).text('');
-                                $('#chat_' + line[i].name).removeClass("callout");
-                            }
-                            if(actionList[i] == 'Pass'){
-                                $('#npcParent' + (i+1)).addClass("passAnimate");
-                            }
+                            
                         }
                   
                     }
@@ -380,33 +373,30 @@
             take the higher positions.  In the case that the line is now empty, the game over text and button will appear so that
             the user can start a new game. Currently, the new game button doesn't always work, and I have no idea what it's 
             successful execution is dependant on. */
-            
-            if(line.length == 0){
-                setUpEndGame(runIntervalID);
-            }
-            else {
+            if (line.length != 0 ){
               var panelWidth = $('#npcParent1').outerWidth(true);
+            
             $.when(
                 $('#npcParent1').animate({opacity: 0}, 750),
                 $('.npc-container').not('#npcParent1').animate({left: -panelWidth}, 750)).then(
-            function () {
+                function () {
                 var npcPanel = document.getElementById('npcParent1');
                 npcPanel.parentNode.removeChild(npcPanel);                                    
                 $('.npc-container').css('left', '0px');
 
                 for(var i = 2; i <=line.length + 1; i++){
-                    $('#npcParent' + i).attr('id', 'npcParent' + (i-1));
-                }
-            });  
+                        $('#npcParent' + i).attr('id', 'npcParent' + (i-1));
+                    }});  
             }
         }
 
         function setUpEndGame(runIntervalID){
+            console.log('Final interval id ' + runIntervalID);
             clearInterval(runIntervalID);
             if (repeat == true) {
                 $('#newGameDiv').css('display', 'inline');
                 setTimeout(function(){
-                reinitializeNPCs();
+                initialize(npcCount);
                 document.getElementById('startButton').disabled = false;
             }, 5000);
             }
@@ -418,7 +408,7 @@
             }
         }
 
-        function nextStep () {  
+        function nextStep (runIntervalID) {  
             if (gameStatus == "initial") {
                 console.log(gameStatus);
                 for (var indx = 0; indx < line.length; indx++){
@@ -442,16 +432,25 @@
                         //print "\n\n\n Wait Cost: " + str(line[indx].waitCost())
                         if (line[indx].actionCost() > line[indx].waitCost()){
                             line[indx].nextAction = 'Protest';
+                            $('#chat_' + line[indx].name).text(getProtestText());
+                            $('#chat_' + line[indx].name).addClass("callout");
                             line[indx].computeEmotion(0.95);
                         }
                         else {
                             line[indx].nextAction = "Wait";
                             line[indx].newResourceVector = [line[indx].resourceVector[0], line[indx].resourceVector[1], line[indx+1].resourceVector[2]];
+                            $('#chat_' + line[indx].name).text('');
+                            $('#chat_' + line[indx].name).removeClass("callout");
                             line[indx].computeEmotion(0.95);
                         };
                     };
 
                 };
+                for(var i = 0; i < line.length; i++){
+                            if(line[i].nextAction == 'Pass'){
+                                $('#npcParent' + (i+1)).addClass("passAnimate");
+                            }
+                        }
                 gameStatus = "penultimate";
             }
             else if (gameStatus == "penultimate") {
@@ -496,17 +495,29 @@
                         passingNPCs.push(indx + 1);
                     };
                 };
-                };   
+                };
+                penultimateUpdate(passingNPCs);   
                 gameStatus = "final";
             }
             else if (gameStatus == "final") {
                 console.log(gameStatus);
+                finalUpdate(runIntervalID);
+                clearCallouts();
+                removeAnimate();
                 line.splice(0,1);
                 for (var indx = 0; indx < line.length; indx ++) {
                     line[indx].nextAction = 'Wait';
                     line[indx].newResourceVector = [line[indx].resourceVector[0], line[indx].resourceVector[1], 1.0/(indx+1)];
                     line[indx].computeEmotion(1); //All happy coz their position is going up
                     line[indx].resourceVector = line[indx].newResourceVector;
+                }
+                if (line.length != 0) {
+                    $('#chat_' + line[0].name).text('Can I get a copy of Destiny?');
+                    $('#chat_' + line[0].name).addClass("callout");
+                }
+                else
+                {
+                    setUpEndGame(runIntervalID);
                 }
                 gameStatus = "initial";
                 console.log(gameStatus);
@@ -519,16 +530,15 @@
             $('#startButton').click(function(){
                 document.getElementById('startButton').disabled = true; // Prevents the user from changing the game state 
                 var runIntervalID = window.setInterval(function(){
-                    nextStep();
-                    console.log(line);
-                    updateNPCs(runIntervalID);
+                    nextStep(runIntervalID);
+                    console.log('Initial Interval ID ' + runIntervalID);
+                    updateNPCs();
                 }, 2000);  //1.5 second delay
                 
             });
             $('#info').click(function(){ //Currently not implemented
                 infoPopup();
             });
-            initializeNPCs();
         });
     </script>
 </head>

@@ -66,7 +66,7 @@
                 this.computeEmotion = function(expectation) {
                     for (var indx = 0; indx < this.resourceVector.length; indx++) {
                         if (indx == 2) {
-                            var desire = (this.resourceVector[indx] - this.newResourceVector[indx])*this.resourceWeights[indx]*(-1); //This is to compensate for desire going up when position goes down
+                            var desire = (this.resourceVector[2] - this.newResourceVector[2])*this.resourceWeights[2]*(-1); //This is to compensate for desire going up when position goes down
                         }
                         else {
                             
@@ -78,6 +78,7 @@
                         console.log("Current value of resource " + this.resourceVector[indx]);
 
                         if (desire > 0 && expectation == 1) {
+                            console.log("Happy Emotion");
                             this.emotion[0] += desire;
                         }
                         else if (desire > 0 && expectation < 1) {
@@ -300,7 +301,7 @@
 
             $('#newGameDiv').css('display', 'none')
             repeat = false; //Setting it to false so that the function does not repeat again (Added by Yathi)
-            initializeNPCs();
+            initialize(npcCount);
         }
 
         function updateNPCs(){
@@ -314,19 +315,15 @@
                         
                         document.getElementById('npcFace' + line[i].name).src = getDynamicFace(line[i].emotion, line[i].name);
                         //Code for Reputation changes
-                        if (line[i].resourceVector[2] < 70) {
+                        if (line[i].resourceVector[1] < 0.7) {
                             $('#npcFace' + line[i].name).removeClass("goodrepu");
                             $('#npcFace' + line[i].name).removeClass("sosorepu");
                             $('#npcFace' + line[i].name).addClass("badrepu");
-                        } else if (line[i].resourceVector[2] < 100) {
+                        } else if (line[i].resourceVector[2] < 1) {
                             $('#npcFace' + line[i].name).removeClass("goodrepu");
                             $('#npcFace' + line[i].name).addClass("sosorepu");
                         }
                         //End code for Reputation changes
-                        
-                        if (gameStatus == 'protest?'){
-                            
-                        }
                   
                     }
         }
@@ -391,12 +388,12 @@
         }
 
         function setUpEndGame(runIntervalID){
-            console.log('Final interval id ' + runIntervalID);
             clearInterval(runIntervalID);
             if (repeat == true) {
                 $('#newGameDiv').css('display', 'inline');
                 setTimeout(function(){
-                initialize(npcCount);
+                    console.log("Starting next Run");
+                    reinitializeNPCs();
                 document.getElementById('startButton').disabled = false;
             }, 5000);
             }
@@ -426,7 +423,7 @@
                 console.log(gameStatus);
                 for (var indx = line.length - 2; indx >= 0; indx--) {
                     if (line[indx+1].nextAction == "Pass") {
-                        //print "Someoen passing " , line[indx].name
+                        //Rew Resource if he wants to protest
                         line[indx].newResourceVector = [line[indx].resourceVector[0]-0.05, line[indx].resourceVector[1]-0.10, line[indx].resourceVector[2]];
                         //print "\n\n\n Action Cost: " + str(line[indx].actionCost())
                         //print "\n\n\n Wait Cost: " + str(line[indx].waitCost())
@@ -507,7 +504,7 @@
                 line.splice(0,1);
                 for (var indx = 0; indx < line.length; indx ++) {
                     line[indx].nextAction = 'Wait';
-                    line[indx].newResourceVector = [line[indx].resourceVector[0], line[indx].resourceVector[1], 1.0/(indx+1)];
+                    line[indx].newResourceVector = [line[indx].resourceVector[0], line[indx].resourceVector[1], 1.0/(indx-1)];
                     line[indx].computeEmotion(1); //All happy coz their position is going up
                     line[indx].resourceVector = line[indx].newResourceVector;
                 }
@@ -531,7 +528,6 @@
                 document.getElementById('startButton').disabled = true; // Prevents the user from changing the game state 
                 var runIntervalID = window.setInterval(function(){
                     nextStep(runIntervalID);
-                    console.log('Initial Interval ID ' + runIntervalID);
                     updateNPCs();
                 }, 2000);  //1.5 second delay
                 

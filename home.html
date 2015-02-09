@@ -73,9 +73,10 @@
                             var desire = (this.newResourceVector[indx] - this.resourceVector[indx])*this.resourceWeights[indx];
                             
                         };
-                        console.log("For indx " + indx + " the desire is " + desire);
-                        console.log("New value of resource " + this.newResourceVector[indx]);
-                        console.log("Current value of resource " + this.resourceVector[indx]);
+                       // console.log('Initial emotion : ' + this.emotion);
+                       // console.log("For indx " + indx + " the desire is " + desire);
+                       // console.log("New value of resource " + this.newResourceVector[indx]);
+                        //console.log("Current value of resource " + this.resourceVector[indx]);
 
                         if (desire > 0 && expectation == 1) {
                             console.log("Happy Emotion");
@@ -90,7 +91,7 @@
                         else if (desire < 0 && expectation < 1) {
                             this.emotion[3] += desire * expectation;
                         } 
-                        console.log('Raw emotion : ' + this.emotion);
+                        //console.log('Raw emotion : ' + this.emotion);
 
                         if ((Math.abs(this.emotion[0])-Math.abs(this.emotion[2])) > 0){
                                 this.emotion[0] = this.emotion[0]-Math.abs(this.emotion[2]);
@@ -110,7 +111,7 @@
                             this.emotion[1] = 0;
                         }
 
-                        console.log('Refined Emotion : ' + this.emotion);
+                       // console.log('Refined Emotion : ' + this.emotion);
                     }
                 }
 
@@ -311,7 +312,7 @@
             The changes made in the specific steps are in their respective functions as a matter of organization. */
 
                     for(var i = 0; i < line.length; i++){
-                        console.log(line[i]);
+                       // console.log(line[i]);
                         
                         document.getElementById('npcFace' + line[i].name).src = getDynamicFace(line[i].emotion, line[i].name);
                         //Code for Reputation changes
@@ -319,7 +320,7 @@
                             $('#npcFace' + line[i].name).removeClass("goodrepu");
                             $('#npcFace' + line[i].name).removeClass("sosorepu");
                             $('#npcFace' + line[i].name).addClass("badrepu");
-                        } else if (line[i].resourceVector[2] < 1) {
+                        } else if (line[i].resourceVector[1] < 1) {
                             $('#npcFace' + line[i].name).removeClass("goodrepu");
                             $('#npcFace' + line[i].name).addClass("sosorepu");
                         }
@@ -413,6 +414,8 @@
                         line[indx].newResourceVector = [line[indx].resourceVector[0]-0.05, line[indx].resourceVector[1]-0.4, line[indx-1].resourceVector[2]];
                         if (line[indx].actionCost() > 0) {
                             line[indx].nextAction = 'Pass'
+                            console.log("Passing Current Resource " + line[indx].resourceVector);
+                            console.log("Passing New Resource " + line[indx].newResourceVector);
                             line[indx].computeEmotion(0.95) //0.95 is the degree of certaininty. TODO: We have to find a way to compute it. 
                         };
                     };
@@ -429,6 +432,8 @@
                         //print "\n\n\n Wait Cost: " + str(line[indx].waitCost())
                         if (line[indx].actionCost() > line[indx].waitCost()){
                             line[indx].nextAction = 'Protest';
+                            console.log("Protesting Current Resource " + line[indx].resourceVector);
+                            console.log("Protesting New Resource " + line[indx].newResourceVector);
                             $('#chat_' + line[indx].name).text(getProtestText());
                             $('#chat_' + line[indx].name).addClass("callout");
                             line[indx].computeEmotion(0.95);
@@ -504,7 +509,7 @@
                 line.splice(0,1);
                 for (var indx = 0; indx < line.length; indx ++) {
                     line[indx].nextAction = 'Wait';
-                    line[indx].newResourceVector = [line[indx].resourceVector[0], line[indx].resourceVector[1], 1.0/(indx-1)];
+                    line[indx].newResourceVector = [line[indx].resourceVector[0], line[indx].resourceVector[1], 1.0/(indx+1)];
                     line[indx].computeEmotion(1); //All happy coz their position is going up
                     line[indx].resourceVector = line[indx].newResourceVector;
                 }

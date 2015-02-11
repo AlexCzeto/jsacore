@@ -75,27 +75,61 @@
             var sorrowEmo = parseInt(getEmotionPercent(emotionList[2]));
             var fearEmo = parseInt(getEmotionPercent(emotionList[3]));
 
-            var imagecounter = 4;
+            var imagecounter = 5;
             // console.log("Joy Emo is " + joyEmo);
             // console.log("Hope Emo is " + hopeEmo);
             // console.log("Sorrow Emo is " + sorrowEmo);
             // console.log("Fear Emo is "  + fearEmo) ;
 
-            if (charname == 'Alex' || charname == 'Smith' || charname == 'Johnson') {
+            if (charname == 'Alex') {
                 imagecounter = 1;
             }
-            else if (charname == 'Mary' || charname == 'Lisa' || charname == 'Laura' || charname == 'Sarah' || charname == 'Emilie' || charname == "Jennifer"){
-                imagecounter = 2;
-            }else if (charname == 'William' || charname == "David" || charname == 'Edward'){
+            else if (charname == 'Mary'){
+                imagecounter = 17;
+            }else if (charname == 'Smith'){
                 imagecounter = 3;
+            }else if (charname == 'Johnson'){
+                imagecounter = 4;
+            }else if (charname == 'David'){
+                imagecounter = 6;
+            }else if (charname == 'Edward'){
+                imagecounter = 7;
+            }else if (charname == 'Matthew'){
+                imagecounter = 8;
+            }else if (charname == 'Liam'){
+                imagecounter = 9;
+            }else if (charname == 'Kevin'){
+                imagecounter = 11;
+            }else if (charname == 'Ahmed'){
+                imagecounter = 12;
+            }else if (charname == 'Chris'){
+                imagecounter = 13;
+            }else if (charname == 'Sergio'){
+                imagecounter = 14;
+            }else if (charname == 'Mary'){
+                imagecounter = 17;
+            }else if (charname == 'Lisa'){
+                imagecounter = 18;
+            }else if (charname == 'Laura'){
+                imagecounter = 19;
+            }else if (charname == 'Nicole'){
+                imagecounter = 2;
+            }else if (charname == 'Sarah'){
+                imagecounter = 10;
+            }else if (charname == 'Emilie'){
+                imagecounter = 15;
+            }else if (charname == "Jennifer"){
+                imagecounter = 16;
+            }else if (charname == 'William'){
+                imagecounter = 4;
             }
             
             var emotionalTable = [
-                ['"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"', 'surveys/distress' + imagecounter + '.jpg', '"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"'],
-                ['"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"', 'surveys/distress' + imagecounter + '.jpg', '"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"'],
-                ['surveys/fear' + imagecounter + '.jpg', 'surveys/fear' + imagecounter + '.jpg', 'surveys/normal' + imagecounter + '.jpg', 'surveys/hope' + imagecounter + '.jpg', 'surveys/hope' + imagecounter + '.jpg'],
-                ['"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"', 'surveys/happy' + imagecounter + '.jpg', '"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"'],
-                ['"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"', 'surveys/happy' + imagecounter + '.jpg', '"surveys/TEMP.jpg"'], ['"surveys/TEMP.jpg"']
+                ['"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"', 'surveys/sadB' + imagecounter + '.jpg', '"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"'],
+                ['"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"', 'surveys/sadB' + imagecounter + '.jpg', '"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"'],
+                ['surveys/afraidB' + imagecounter + '.jpg', 'surveys/afraidB' + imagecounter + '.jpg', 'surveys/normal' + imagecounter + '.jpg', 'surveys/hopeB' + imagecounter + '.jpg', 'surveys/hopeB' + imagecounter + '.jpg'],
+                ['"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"', 'surveys/happyB' + imagecounter + '.jpg', '"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"'],
+                ['"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"', 'surveys/happyB' + imagecounter + '.jpg', '"surveys/TEMP.jpg"'], ['"surveys/TEMP.jpg"']
             ]
             var x = 2;
             var y = 2;

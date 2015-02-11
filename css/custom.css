@@ -39,10 +39,9 @@ dt {
     }
 
     .buttonDiv {
-        display: inline;
-        margin-top: 150px;
-        margin-left: 40px;
-        margin-right: 30px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto; 
     }
 
     .scoreboard-color-legend{         

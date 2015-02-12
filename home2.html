@@ -25,8 +25,8 @@
         //GLOBAL VARIABLE//
         var repeat = true; //Set true initially so that we get the repeat run
         var npcCount = 6;
-        var nameList = ["Alex", "Smith", "Johnson", "William", "Mary", "David", "Jennifer", "Chris", "Lisa", "Edward",
-            "Laura", "Sergio", "Sarah", "Emilie", "Matthew", "Kevin", "Liam",
+        var nameList = ["Alex", "Smith", "William", "Mary", "Jennifer", "Chris", "Lisa", "Edward",
+            "Laura", "Sergio", "Sarah", "Emilie", "Matthew", "Kevin", "Liam", "Nicole",
             "Ahmed"];
 
 
@@ -75,27 +75,57 @@
             var sorrowEmo = parseInt(getEmotionPercent(emotionList[2]));
             var fearEmo = parseInt(getEmotionPercent(emotionList[3]));
 
-            var imagecounter = 4;
+            var imagecounter = 5;
             // console.log("Joy Emo is " + joyEmo);
             // console.log("Hope Emo is " + hopeEmo);
             // console.log("Sorrow Emo is " + sorrowEmo);
             // console.log("Fear Emo is "  + fearEmo) ;
 
-            if (charname == 'Alex' || charname == 'Smith' || charname == 'Johnson') {
+            if (charname == 'Alex') {
                 imagecounter = 1;
             }
-            else if (charname == 'Mary' || charname == 'Lisa' || charname == 'Laura' || charname == 'Sarah' || charname == 'Emilie' || charname == "Jennifer"){
-                imagecounter = 2;
-            }else if (charname == 'William' || charname == "David" || charname == 'Edward'){
+            else if (charname == 'Mary'){
+                imagecounter = 17;
+            }else if (charname == 'Smith'){
                 imagecounter = 3;
+            }else if (charname == 'Edward'){
+                imagecounter = 5;
+            }else if (charname == 'Matthew'){
+                imagecounter = 8;
+            }else if (charname == 'Liam'){
+                imagecounter = 9;
+            }else if (charname == 'Kevin'){
+                imagecounter = 11;
+            }else if (charname == 'Ahmed'){
+                imagecounter = 12;
+            }else if (charname == 'Chris'){
+                imagecounter = 13;
+            }else if (charname == 'Sergio'){
+                imagecounter = 14;
+            }else if (charname == 'Mary'){
+                imagecounter = 17;
+            }else if (charname == 'Lisa'){
+                imagecounter = 18;
+            }else if (charname == 'Laura'){
+                imagecounter = 19;
+            }else if (charname == 'Nicole'){
+                imagecounter = 2;
+            }else if (charname == 'Sarah'){
+                imagecounter = 10;
+            }else if (charname == 'Emilie'){
+                imagecounter = 15;
+            }else if (charname == "Jennifer"){
+                imagecounter = 16;
+            }else if (charname == 'William'){
+                imagecounter = 4;
             }
             
             var emotionalTable = [
-                ['"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"', 'surveys/distress' + imagecounter + '.jpg', '"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"'],
-                ['"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"', 'surveys/distress' + imagecounter + '.jpg', '"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"'],
-                ['surveys/fear' + imagecounter + '.jpg', 'surveys/fear' + imagecounter + '.jpg', 'surveys/normal' + imagecounter + '.jpg', 'surveys/hope' + imagecounter + '.jpg', 'surveys/hope' + imagecounter + '.jpg'],
-                ['"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"', 'surveys/happy' + imagecounter + '.jpg', '"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"'],
-                ['"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"', 'surveys/happy' + imagecounter + '.jpg', '"surveys/TEMP.jpg"'], ['"surveys/TEMP.jpg"']
+                ['"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"', 'surveys/normal' + imagecounter + '.jpg', '"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"'],
+                ['"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"', 'surveys/normal' + imagecounter + '.jpg', '"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"'],
+                ['surveys/normal' + imagecounter + '.jpg', 'surveys/normal' + imagecounter + '.jpg', 'surveys/normal' + imagecounter + '.jpg', 'surveys/normal' + imagecounter + '.jpg', 'surveys/normal' + imagecounter + '.jpg'],
+                ['"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"', 'surveys/normal' + imagecounter + '.jpg', '"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"'],
+                ['"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"', 'surveys/normal' + imagecounter + '.jpg', '"surveys/TEMP.jpg"'], ['"surveys/TEMP.jpg"']
             ]
             var x = 2;
             var y = 2;
@@ -525,7 +555,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="/">ACORE</a>
+          <a class="navbar-brand" href="index.html">ACORE</a>
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
@@ -548,8 +578,8 @@
             <button id="startButton" class="btn btn-success" style='margin-left:0px; width:100px;' type="button" > Start </button>
         </div>
 
-        <div id="logoDiv" style='width:200px; height:170px; float:left; margin-right: 10px;'>
-            <img src="surveys/Destiny.jpg" style='width:100%; height:auto; margin-top:200px; border: 2px solid black; border-radius: 5px;'/>
+        <div id="logoDiv" style='width:220px; height:170px; float:left; margin-right: 10px;'>
+            <img src="surveys/Shopkeeper.png" style='width:100%; height:auto; margin-top:140px; '/>
         </div>
 
         <div id='newGameDiv' style='display:none;'>

@@ -28,6 +28,7 @@
         var nameList = ["Rossi", "Pankaj", "Davina", "Leona", "Jim", "Delia", "Vince",
             "Cathleen", "Josh", "Nicole", "Stephanie", "Chris", "Tom", "Matt", "Nitya",
             "Jesse"];
+        var anyone_passing = false;
 
 
 //HELPER Functions
@@ -272,8 +273,8 @@
                 setTimeout(function(){
                     console.log("Starting next Run");
                     reinitializeNPCs();
-                document.getElementById('startButton').disabled = false;
-            }, 5000);
+                    document.getElementById('startButton').disabled = false;
+                }, 5000);
             }
             else {
                 //Have to load a new page
@@ -395,6 +396,7 @@
         function nextStep (runIntervalID) {  
             if (gameStatus == "initial") {
                 console.log(gameStatus);
+                anyone_passing = false;
                 for (var indx = 0; indx < line.length; indx++){
                     line[indx].halveEmotion();
                     if (indx != 0) {
@@ -404,11 +406,15 @@
                             console.log("Passing Current Resource " + line[indx].resourceVector);
                             console.log("Passing New Resource " + line[indx].newResourceVector);
                             line[indx].computeEmotion(0.95) //0.95 is the degree of certaininty. TODO: We have to find a way to compute it. 
+                            anyone_passing = true;
                         };
                     };
                 };
                 updateNPCs();
                 gameStatus = "protest";
+                if (!anyone_passing) {
+                    nextStep(runIntervalID);
+                }
             }
             else if (gameStatus == "protest") {
                 console.log(gameStatus);
@@ -442,8 +448,11 @@
                             if(line[i].nextAction == 'Pass'){
                                 $('#npcParent' + (i+1)).addClass("passAnimate");
                             }
-                        }
+                }
                 gameStatus = "penultimate";
+                if (!anyone_passing) {
+                    nextStep(runIntervalID);
+                }
             }
             else if (gameStatus == "penultimate") {
                 console.log(gameStatus);
@@ -496,6 +505,9 @@
                 };
                 penultimateUpdate(passingNPCs);   
                 gameStatus = "final";
+                if (!anyone_passing) {
+                    nextStep(runIntervalID);
+                }
             }
             else if (gameStatus == "final") {
                 console.log(gameStatus);
@@ -531,7 +543,7 @@
                 document.getElementById('startButton').disabled = true; // Prevents the user from changing the game state 
                 var runIntervalID = window.setInterval(function(){
                     nextStep(runIntervalID);
-                }, 2000);  //1.5 second delay
+                }, 2500);  //1.5 second delay
                 
             });
             $('#info').click(function(){ //Currently not implemented

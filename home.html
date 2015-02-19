@@ -25,9 +25,9 @@
         //GLOBAL VARIABLE//
         var repeat = true; //Set true initially so that we get the repeat run
         var npcCount = 6;
-        var nameList = ["Smith", "Pankaj", "Davina", "Leona", "Jim", "Delia", "Vince",
+        var nameList = ["Rossi", "Pankaj", "Davina", "Leona", "Jim", "Delia", "Vince",
             "Cathleen", "Josh", "Nicole", "Stephanie", "Chris", "Tom", "Matt", "Nitya",
-            "Ahmed"];
+            "Jesse"];
 
 
 //HELPER Functions
@@ -83,7 +83,7 @@
 
             if (charname == 'Davina'){
                 imagecounter = 17;
-            }else if (charname == 'Smith'){
+            }else if (charname == 'Rossi'){
                 imagecounter = 3;
             }else if (charname == 'Vince'){
                 imagecounter = 5;
@@ -93,7 +93,7 @@
                 imagecounter = 9;
             }else if (charname == 'Tom'){
                 imagecounter = 11;
-            }else if (charname == 'Ahmed'){
+            }else if (charname == 'Jesse'){
                 imagecounter = 12;
             }else if (charname == 'Jim'){
                 imagecounter = 13;
@@ -168,7 +168,7 @@
         var passingNPCs = [];
 
             function makeNPC (position) {
-                var name = nameList.splice(getRandomInt(0, nameList.length-1), 1);
+                var name = nameList.splice(getRandomInt(0, nameList.length), 1);
                 var npc_in_line = new npc(name[0], [1.0, 1.0, 1.0/(position+1)]); //because splice returns an array
                 return npc_in_line;
             }

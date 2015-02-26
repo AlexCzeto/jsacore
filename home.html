@@ -266,6 +266,8 @@
                 }
                 initializeNPCs();
             }
+
+
             function setUpEndGame(runIntervalID){
             clearInterval(runIntervalID);
             if (repeat == true) {
@@ -281,6 +283,7 @@
                 $('#logoDiv').css('display', 'none');
                 $('#startButton').css('display', 'none');
                 $('#surveyDiv').css('display', 'inline');
+                $('#surveyTitle').text('Scenario 23523');
             }
         }
 
@@ -580,7 +583,7 @@
     </div>
 
     <div class='col-sm-12' id='npcDiv' style='position:relative;'>
-        <h3 style='text-align:center; margin-top: 0;'> People standing in line </h3>
+        <h3 id="surveyTitle" style='text-align:center; margin-top: 0;'> People standing in line </h3>
         <div >
             <button id="startButton" class="btn btn-success" style='margin-left:0px; width:100px;' type="button" > Start </button>
         </div>

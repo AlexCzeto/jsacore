@@ -21,22 +21,7 @@
     }
 
 </style>
-        <script>
-        $('document').ready(function(){
 
-            initialize(npcCount); //The value of NPC count is defined at the start. 
-            $('#startButton').click(function(){
-                document.getElementById('startButton').disabled = true; // Prevents the user from changing the game state 
-                var runIntervalID = window.setInterval(function(){
-                    nextStep(runIntervalID);
-                }, 2000);  //1.5 second delay
-                
-            });
-            $('#info').click(function(){ //Currently not implemented
-                infoPopup();
-            });
-        });
-    </script>
 </head>
 <body >
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -66,8 +51,8 @@
     </div>
 
     <div class='col-md-7 col-offset-4 centered' id='npcDiv' style='margin-left: 300px'>
-        <h3 style='text-align:center; margin-top: 0;'> Thank You for participating</h3>
-        <p style="text-align: justify;">Please read the debriefing handout given out to you. Also note that you may withdraw your data from the study within three days if you wish to do so.</p>
+        <h3 style='text-align:center; margin-top: 0; font-size: 3em;'> Thank You for participating</h3>
+        <p style="text-align: center; margin-top: 50px; font-size: 1.5em;">Please read the debriefing handout given out to you. Also note that you may withdraw your data from the study within three days if you wish to do so.</p>
         <!-- <div class="buttonDiv center-block" style="margin-left: 20%; margin-bottom: 20px;"><img src="surveys/pass_cont.png"></div> -->
         <!-- <p style="text-align: justify;">Once you a:</p> -->
         <!-- <div class="buttonDiv center-block"> -->

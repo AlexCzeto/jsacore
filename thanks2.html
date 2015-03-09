@@ -21,22 +21,6 @@
     }
 
 </style>
-        <script>
-        $('document').ready(function(){
-
-            initialize(npcCount); //The value of NPC count is defined at the start. 
-            $('#startButton').click(function(){
-                document.getElementById('startButton').disabled = true; // Prevents the user from changing the game state 
-                var runIntervalID = window.setInterval(function(){
-                    nextStep(runIntervalID);
-                }, 2000);  //1.5 second delay
-                
-            });
-            $('#info').click(function(){ //Currently not implemented
-                infoPopup();
-            });
-        });
-    </script>
 </head>
 <body >
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -66,12 +50,12 @@
     </div>
 
     <div class='col-md-7 col-offset-4 centered' id='npcDiv' style='margin-left: 300px'>
-        <h3 style='text-align:center; margin-top: 0; font-size: 2em;'> Briefing continued..</h3>
-        <p style="text-align: justify;">The characters are eager to get the game early and some may try to pass someone ahead of them in the line.  When this happens it is shown by an animation where the person trying to pass starts moving up and down. This passing action is shown by the animation below:</p>
-        <div class="buttonDiv center-block" style="margin-left: 20%; margin-bottom: 20px;"><img src="surveys/pass_cont.png"></div>
+        <h3 style='text-align:center; margin-top: 0; font-size: 2.5em;'> You have completed a scenario</h3>
+        <p style="text-align: center; margin-top: 50px; font-size: 1.5em;">When you are ready to observe the next scenario, click the button below</p>
+        <!-- <div class="buttonDiv center-block" style="margin-left: 20%; margin-bottom: 20px;"><img src="surveys/pass_cont.png"></div> -->
         <!-- <p style="text-align: justify;">Once you a:</p> -->
         <div class="buttonDiv center-block">
-            <a href="behaviour.html"><button id="startButton" class="btn btn-success" style='margin-left:0px; margin-top: 40px; width:150px; height:50px' type="button" > Continue </button></a>
+            <a href="home6.html"><button id="startButton" class="btn btn-success" style='margin-left: 40%; margin-top: 40px; width:150px; height:50px' type="button" > Continue </button></a>
         </div>
         
     </div>

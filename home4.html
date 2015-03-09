@@ -31,6 +31,7 @@
             "Jesse"];
         var anyone_passing = false;
 
+
 //HELPER Functions
         // Returns a random integer between min (included) and max (excluded)
         // Using Math.round() will give you a non-uniform distribution!
@@ -123,41 +124,25 @@
                 ['"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"', 'surveys/normal' + imagecounter + '.jpg', '"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"'],
                 ['"surveys/TEMP.jpg"', '"surveys/TEMP.jpg"', 'surveys/normal' + imagecounter + '.jpg', '"surveys/TEMP.jpg"'], ['"surveys/TEMP.jpg"']
             ]
-            var x = 2;
-            var y = 2;
-            if ((joyEmo + hopeEmo) > (sorrowEmo + fearEmo)) {
-                if (joyEmo > hopeEmo){
-                if (joyEmo > 0) {
-                    x = 3 
-                    y = 2
-                }else if (joyEmo > 20) {
-                    x = 4
-                    y = 2
-                }}
-            else {
-                if (hopeEmo > 0) {
-                    x = 2
-                    y = 3
-                }else if (hope > 20) {
-                    x = 2
-                    y = 4
-                }}}
-            else {
-                if (sorrowEmo > fearEmo) {
-                    if (sorrowEmo > 0) {
-                        x = 1
-                        y = 2
-                    }else if (sorrowEmo > 20) {
-                        x = 0
-                        y = 2
-                    }}
-                else {if (fearEmo > 0) {
-                        x = 2
-                        y = 1
-                    }else if (fearEmo > 20) {
-                        x = 2 
-                        y = 0
-                    }}}
+
+            var randomFaces = getRandomInt(0,5);
+            if (randomFaces == 0) {
+                x = 2;
+                y = 2;
+            } else if (randomFaces == 1 ){
+                x = 2;
+                y = 3;
+            } else if (randomFaces == 2 ){
+                x = 2;
+                y = 1;
+            } else if (randomFaces == 3 ){
+                x = 1;
+                y = 2;
+            } else if (randomFaces == 4 ){
+                x = 3;
+                y = 2;
+            }
+
             return emotionalTable[x][y];
         }
 //END Helper Functions
@@ -268,7 +253,6 @@
             }
 
 
-
             function setUpEndGame(runIntervalID){
             clearInterval(runIntervalID);
             if (repeat == true) {
@@ -276,12 +260,12 @@
                 setTimeout(function(){
                     console.log("Starting next Run");
                     reinitializeNPCs();
-                document.getElementById('startButton').disabled = false;
-            }, 5000);
+                    document.getElementById('startButton').disabled = false;
+                }, 5000);
             }
             else {
                 //Have to load a new page
-                window.location.replace("form2.html");
+                window.location.replace("form4.html");
             }
         }
 
@@ -455,7 +439,7 @@
                             if(line[i].nextAction == 'Pass'){
                                 $('#npcParent' + (i+1)).addClass("passAnimate");
                             }
-                        }
+                }
                 gameStatus = "penultimate";
                 if (!anyone_passing) {
                     nextStep(runIntervalID);
@@ -587,7 +571,7 @@
     </div>
 
     <div class='col-sm-12' id='npcDiv' style='position:relative;'>
-        <h3 id = "surveyTitle" style='text-align:center; margin-top: 0;'> Scenario 2 </h3>
+        <h3 id="surveyTitle" style='text-align:center; margin-top: 0;'> Scenario 5 </h3>
         <div >
             <button id="startButton" class="btn btn-success" style='margin-left:0px; width:100px;' type="button" > Start </button>
         </div>
